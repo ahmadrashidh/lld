@@ -64,6 +64,180 @@ Cyclomatic complexity is a linting method to detect god classes/ monster methods
 ## Solution
 - Always create dependencies to abstract modules
 
+# Design a Bird
+
+## Iteration 1
+
+```mermaid
+---
+title: Design a Bird
+---
+classDiagram
+    class Bird{ 
+        - name: String
+        - color: Color
+        - weight: Double
+        - type: BirdType
+        - size: Size 
+        +mate()
+        +eat()
+        +sleep()
+    }
+    class Color{
+        <<Enumeration>>
+        WHITE
+        RED
+        BLUE
+        GREEN
+    }
+    class BirdType{
+        <<Enumeration>>
+        EAGLE,
+        PARROT,
+        PENGUIN
+    }
+    class Size{
+        <<Enumeration>>
+        SMALL
+        MEDIUM
+        LARGE
+    }
+    
+    Bird o-- Color
+    Bird o-- BirdType
+    Bird o-- Size
+    
+```
+
+- `fly` method is loaded with functionality of all three `BirdTypes` - monster method violating SRP and OCP
+- `Bird` class handles implementation of all types of birds.
+
+## Iteration 2
+
+```mermaid
+---
+title: Design a Bird
+---
+classDiagram
+
+    Bird o-- Color
+    Bird o-- Size
+
+    Bird <|-- Eagle
+    Bird <|-- Parrot
+    Bird <|-- Penguin
+
+    class Bird{ 
+        <<Abstract>>
+        - name: String
+        - color: Color
+        - weight: Double
+        - size: Size 
+        +fly()*
+        +eat()
+        +swim()*
+    }
+
+    class Eagle {
+
+    }
+
+    class Parrot {
+
+    }
+
+    class Penguin {
+
+    }
+
+    class Color{
+        <<Enumeration>>
+        WHITE
+        RED
+        BLUE
+        GREEN
+    }
+
+    class Size{
+        <<Enumeration>>
+        SMALL
+        MEDIUM
+        LARGE
+    }
+    
+```
+
+- Penguin doesn't fly while rest  don't swim - substituting base type to subtype requires exception handling in overridden `fly()` which is violation of LSP
+
+## Iteration 3
+
+```mermaid
+---
+title: Design a Bird
+---
+classDiagram
+
+    class Bird{ 
+        <<Abstract>>
+        - name: String
+        - color: Color
+        - weight: Double
+        - size: Size 
+        +eat()
+    }
+
+    class Flyable{
+        <<Interface>>
+        +fly()
+    }
+
+    class Swimmable{
+        <<Interface>>
+        +swim()
+    }
+
+    class Eagle {
+
+    }
+
+    class Parrot {
+
+    }
+
+    class Penguin {
+
+    }
+
+    class Color{
+        <<Enumeration>>
+        WHITE
+        RED
+        BLUE
+        GREEN
+    }
+
+    class Size{
+        <<Enumeration>>
+        SMALL
+        MEDIUM
+        LARGE
+    }
+
+    Bird o-- Color
+    Bird o-- Size
+
+    Bird <|-- Eagle
+    Bird <|-- Parrot
+    Bird <|-- Penguin
+
+    Eagle <|-- Flyable
+    Parrot <|-- Flyable
+    Penguin <|-- Swimmable
+```
+
+
+
+
 
 
 
