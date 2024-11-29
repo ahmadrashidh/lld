@@ -1,8 +1,11 @@
 package org.example.tictactoe;
 
-import org.example.tictactoe.models.Board;
-import org.example.tictactoe.models.Game;
+import org.example.tictactoe.models.*;
+import org.example.tictactoe.strategies.RandomPlayingStrategy;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+
 
 public class GameTest {
 
@@ -11,6 +14,23 @@ public class GameTest {
 
     @Test
     public void testCreateGame(){
-        Board board = new Board(BOARD_SIZE);
+
+        Game game = Game.builder()
+                .withSize(BOARD_SIZE)
+                .withPlayer(
+                        HumanPlayer.builder()
+                                .withSymbol(Symbol.X)
+                                .user(new User())
+                                .build())
+                .withPlayer(
+                        BotPlayer.builder()
+                                .withSymbol(Symbol.O)
+                                .level(GameLevel.EASY)
+                                .withPlayingStrategy(new RandomPlayingStrategy())
+                                .build())
+                .build();
+
+        assertEquals("if the game is created, it should have two players", 2, game.getPlayers().size() );
+
     }
 }
